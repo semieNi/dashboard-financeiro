@@ -7,7 +7,7 @@ st.set_page_config(page_title="Dashboard Financeiro", layout="wide")
 st.title("📊 Seu Dashboard Financeiro")
 
 # Obter user_id da URL
-query_params = st.experimental_get_query_params()
+query_params = st.query_params
 user_id = query_params.get("user_id", [None])[0]
 
 if not user_id:
