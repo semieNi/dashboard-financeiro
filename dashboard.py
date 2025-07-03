@@ -13,7 +13,6 @@ st.set_page_config(page_title="Dashboard Financeiro", page_icon="📊", layout="
 st.title(":bar_chart: Dashboard Financeiro")
 
 # Lê user_id da URL
-query_params = st.query_params
 user_id = st.query_params.get("user_id")
 
 if user_id is None:
@@ -26,19 +25,20 @@ except ValueError:
     st.error("❌ user_id inválido.")
     st.stop()
 
-
-if not user_id:
-    st.error("🛑 Acesso negado: nenhum usuário identificado na URL.")
-    st.stop()
-
 st.success(f"🔑 Usuário identificado: {user_id}")
+
+# Diagnóstico (opcional): mostrar user_ids com dados no banco
+with engine.connect() as conn:
+    debug_result = conn.execute(text("SELECT DISTINCT user_id FROM transacoes"))
+    debug_ids = [str(r[0]) for r in debug_result.fetchall()]
+    st.info(f"🧪 IDs com transações no banco: {debug_ids}")
 
 # Busca transações no PostgreSQL
 with engine.connect() as conn:
     result = conn.execute(text("""
         SELECT data, tipo, valor, categoria
         FROM transacoes
-        WHERE user_id = int(user_id)
+        WHERE user_id = :user_id
         ORDER BY data DESC
     """), {"user_id": user_id})
     rows = result.fetchall()
