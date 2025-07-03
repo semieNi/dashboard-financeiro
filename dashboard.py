@@ -38,7 +38,7 @@ with engine.connect() as conn:
     result = conn.execute(text("""
         SELECT data, tipo, valor, categoria
         FROM transacoes
-        WHERE user_id = :user_id
+        WHERE user_id = int(user_id)
         ORDER BY data DESC
     """), {"user_id": user_id})
     rows = result.fetchall()
