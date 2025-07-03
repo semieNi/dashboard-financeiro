@@ -14,7 +14,7 @@ st.title(":bar_chart: Dashboard Financeiro")
 
 # Lê user_id da URL
 query_params = st.query_params
-user_id = query_params.get("user_id")
+user_id = query_params.get("user_id", [None])[0]
 
 if not user_id:
     st.error("🛑 Acesso negado: nenhum usuário identificado na URL.")
